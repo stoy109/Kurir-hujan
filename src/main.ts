@@ -13,13 +13,52 @@ gsap.registerPlugin(ScrollTrigger);
 const data = raw as unknown as SceneFile;
 
 /**
- * About 100vh of travel per 1.6s of timeline.
- * Scroll percent tracks time linearly, which matches the beat table in the spec.
+ * How scroll drives the pinned scenes. Beat percentages stay linear with time;
+ * only the pixels-per-second change.
+ *
+ * vhPerSecond is pin travel per second of timeline. The first build wrote
+ * "+=1100vh", but ScrollTrigger only scales "%" on a relative end — the "vh"
+ * suffix was ignored, so the scenes were 1100px and 1200px. On a 900px screen
+ * that is about 1.6s of timeline per 100px wheel notch. 180 real vh per second
+ * is about 3× the distance that string was meant to be.
+ *
+ * scrub `true` ties the timeline to the scrollbar. A number is seconds of
+ * catch-up lag (the old 0.6 kept the scene moving after the wheel had stopped).
+ * There is no Lenis or other inertia scroller.
+ *
+ * ?speed= multiplies how fast the timeline advances per pixel. 1 is this config,
+ * 0.5 is twice the scroll (slower), 2 is half the scroll (faster). Clamped to 0.2–4.
+ * ?scrub=0 (or true) is 1:1. ?scrub=0.3 restores a short catch-up.
  */
-const SCROLL_VH = { rute: 1100, surat: 1200 } as const;
+const SCROLL = {
+  vhPerSecond: 180,
+  scrub: true as boolean | number,
+};
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const params = new URLSearchParams(location.search);
+
+function scrollSpeed(): number {
+  const raw = params.get("speed");
+  if (raw == null || raw === "") return 1;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n <= 0) return 1;
+  return Math.min(4, Math.max(0.2, n));
+}
+
+function readScrub(): boolean | number {
+  const raw = params.get("scrub");
+  if (raw == null || raw === "") return SCROLL.scrub;
+  if (raw === "0" || raw === "true") return true;
+  const n = Number(raw);
+  if (Number.isFinite(n) && n >= 0) return n === 0 ? true : n;
+  return SCROLL.scrub;
+}
+
+/** Pinned scroll distance for a scene, in vh. */
+function pinVh(durationMs: number): number {
+  return (SCROLL.vhPerSecond * (durationMs / 1000)) / scrollSpeed();
+}
 
 function fitAll(): void {
   const vw = window.innerWidth;
@@ -71,16 +110,18 @@ function mountScene(key: "rute" | "surat", scene: Scene): gsap.core.Timeline {
     return tl;
   }
 
-  const scrub: boolean | number = params.get("scrub") === "0" ? true : 0.6;
+  const distanceVh = pinVh(scene.durationMs);
+  screen.dataset.pinVh = String(Math.round(distanceVh));
   ScrollTrigger.create({
     id: key,
     trigger: screen,
     start: "top top",
-    end: `+=${SCROLL_VH[key]}vh`,
+    end: () => `+=${Math.round((window.innerHeight * distanceVh) / 100)}`,
     pin: true,
-    scrub,
+    scrub: readScrub(),
     animation: tl,
     anticipatePin: 1,
+    invalidateOnRefresh: true,
   });
   return tl;
 }
@@ -98,7 +139,24 @@ async function boot(): Promise<void> {
     fitAll();
     ScrollTrigger.refresh();
     document.documentElement.classList.remove("booting");
-    Object.assign(window, { __kurir: { rute, surat, ScrollTrigger, gsap } });
+    const speed = scrollSpeed();
+    Object.assign(window, {
+      __kurir: {
+        rute,
+        surat,
+        ScrollTrigger,
+        gsap,
+        scroll: {
+          vhPerSecond: SCROLL.vhPerSecond,
+          speed,
+          scrub: readScrub(),
+          pinVh: {
+            rute: pinVh(data.scenes.rute.durationMs),
+            surat: pinVh(data.scenes.surat.durationMs),
+          },
+        },
+      },
+    });
     window.addEventListener("resize", () => {
       fitAll();
       ScrollTrigger.refresh();
