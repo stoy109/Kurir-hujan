@@ -17,10 +17,11 @@ const data = raw as unknown as SceneFile;
  * only the pixels-per-second change.
  *
  * vhPerSecond is pin travel per second of timeline. The first build wrote
- * "+=1100vh", but ScrollTrigger only scales "%" on a relative end — the "vh"
- * suffix was ignored, so the scenes were 1100px and 1200px. On a 900px screen
- * that is about 1.6s of timeline per 100px wheel notch. 180 real vh per second
- * is about 3× the distance that string was meant to be.
+ * "+=1100vh", but ScrollTrigger ignores a vh suffix on a relative end, so the
+ * scenes were really 1100px and 1200px (~1.64s of timeline per 100px notch).
+ * 100/3 vh per second is about 5× that distance: at a 900px-tall window Rute
+ * is 6 viewports (5400px) and Surat is 6.6 (5940px), and 100px advances 1/3s.
+ * A station of ~2.7s is about 8 notches.
  *
  * scrub `true` ties the timeline to the scrollbar. A number is seconds of
  * catch-up lag (the old 0.6 kept the scene moving after the wheel had stopped).
@@ -31,7 +32,7 @@ const data = raw as unknown as SceneFile;
  * ?scrub=0 (or true) is 1:1. ?scrub=0.3 restores a short catch-up.
  */
 const SCROLL = {
-  vhPerSecond: 180,
+  vhPerSecond: 100 / 3,
   scrub: true as boolean | number,
 };
 

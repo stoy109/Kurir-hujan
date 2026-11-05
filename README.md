@@ -36,14 +36,14 @@ Scroll percent tracks time linearly. That matches the beat tables. There is no s
 
 | Scene | Timeline | Scroll while pinned | Beats |
 |---|---|---|---|
-| Rute | 18.0s | 3240vh | Title 0–13%, Manggarai 13–28%, Tebet 28–43%, Cawang 43–58%, Duren Kalibata 58–73%, Pasar Minggu 73–88%, Finish 88–100% |
-| Surat | 19.8s | 3564vh | Write 0–15%, Fold 15–29%, Seal 29–43%, Crack 43–60%, Hand-off 60–80%, Open 80–100% |
+| Rute | 18.0s | 600vh (5,400px at 900px tall) | Title 0–13%, Manggarai 13–28%, Tebet 28–43%, Cawang 43–58%, Duren Kalibata 58–73%, Pasar Minggu 73–88%, Finish 88–100% |
+| Surat | 19.8s | 660vh (5,940px at 900px tall) | Write 0–15%, Fold 15–29%, Seal 29–43%, Crack 43–60%, Hand-off 60–80%, Open 80–100% |
 
-`SCROLL.vhPerSecond` in `src/main.ts` is 180, times the scene length. The percentages did not change.
+`SCROLL.vhPerSecond` in `src/main.ts` is `100 / 3`, times the scene length. The percentages did not change.
 
-The first build asked ScrollTrigger for `+=1100vh` and `+=1200vh`. On a relative `end`, ScrollTrigger only treats `%` as a unit and ignores a `vh` suffix, so those were 1100px and 1200px. On a 900px-tall window that was about **1.64s of timeline per 100px** of wheel. One notch skipped a noticeable slice of a station, and a trackpad flick skipped several. The pin distance is now a function of `innerHeight`, so the vh values above are real. 180vh per second is about 3× the distance the old strings were meant to describe, and about 27× the distance they actually were. On a 900px window a 100px notch advances about **0.062s**. A Rute station (roughly 2.7s) is about 44 notches, not one flick.
+The first build asked ScrollTrigger for `+=1100vh` and `+=1200vh`. On a relative `end`, ScrollTrigger only treats `%` as a unit and ignores a `vh` suffix, so those were 1100px and 1200px. On a 900px-tall window that was about **1.64s of timeline per 100px** of wheel. The pin distance is now a function of `innerHeight`. This setting is about 5× that accidental pixel length: **0.333s per 100px**, so a station or letter stage of ~2.7s is about 8 notches.
 
-At 1440×900 the whole page is about 73 viewports (hero, both pins, Daftar, Penutup). `?speed=2` halves that if it feels too long.
+At 1440×900 the whole page is about 17 viewports (hero, both pins, Daftar, Penutup). `?speed=` scales that without moving the beats.
 
 The timeline is locked to the scrollbar (`scrub: true`). There is no Lenis and no extra inertia. The old `scrub: 0.6` kept the scene catching up for 0.6s after the wheel stopped. Tween easings still live on each animation, not on the scroll.
 
@@ -81,4 +81,4 @@ Driven by timeline time, so they reverse when you scroll back.
 - Body 2 and body 3 fit on one line at 18px in a 640px measure, so they are not forced onto two lines.
 - Figma and Jitter rasterize the same font files slightly differently. Hero, Daftar, and Penutup match the frames closely; remaining error is mostly antialiasing.
 - The countdown does not tick. The form selects a station (Cawang starts selected) and does not post anywhere.
-- The pinned scenes are long on purpose (180vh of scroll per second of timeline, about 73 viewports for the whole page at 1440×900). There is no snap. `?speed=` shortens or lengthens that without retuning the beats. ScrollTrigger does not honor `vh` on a relative `end`, so the distance is computed in pixels from `window.innerHeight`.
+- The pinned scenes use `100/3` vh of scroll per second of timeline, about 17 viewports for the whole page at 1440×900. There is no snap. `?speed=` shortens or lengthens that without retuning the beats. ScrollTrigger does not honor `vh` on a relative `end`, so the distance is computed in pixels from `window.innerHeight`.
