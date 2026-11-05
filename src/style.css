@@ -1,0 +1,427 @@
+:root {
+  --bg: #0a0d14;
+  --panel: #121823;
+  --line: #243042;
+  --text: #dce4ee;
+  --text-dim: #6b7788;
+  --accent: #9fc3e6;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+html.booting .page {
+  visibility: hidden;
+}
+
+body {
+  font-family: "Hanken Grotesk", sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.55;
+  text-rendering: geometricPrecision;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+p,
+h1,
+h2,
+fieldset,
+legend {
+  margin: 0;
+}
+
+fieldset {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+#fx-svg {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.page {
+  background: var(--bg);
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  display: grid;
+  place-items: center;
+}
+
+.sizer {
+  position: relative;
+  overflow: hidden;
+}
+
+.flow {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1440px;
+  transform-origin: 0 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.layer {
+  position: absolute;
+  box-sizing: border-box;
+  transform-origin: center center;
+  margin: 0;
+}
+
+.layer.ellipse {
+  border-radius: 50%;
+}
+
+.layer.text {
+  white-space: pre-wrap;
+}
+
+.layer.group {
+  pointer-events: none;
+}
+
+.line {
+  display: block;
+  white-space: nowrap;
+}
+
+.clip,
+.word {
+  display: inline-block;
+  white-space: pre;
+}
+
+.clip.is-mask {
+  overflow: hidden;
+  height: 1.15em;
+  vertical-align: bottom;
+}
+
+.film-window {
+  overflow: hidden;
+}
+
+.film-strip {
+  display: flex;
+  width: 200%;
+  height: 100%;
+  will-change: transform;
+}
+
+.film-cell {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.group[data-name="world"] {
+  will-change: transform;
+}
+
+.rain {
+  position: absolute;
+  width: 1px;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+.top-note {
+  position: absolute;
+  top: 61px;
+  font-family: "Martian Mono", ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.top-left {
+  left: 64px;
+}
+
+.top-right {
+  left: 1092px;
+}
+
+.clock {
+  position: absolute;
+  left: 548.5px;
+  top: 48px;
+  width: 317px;
+  height: 43px;
+  background: var(--line);
+  border: 1px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 10px 16px;
+}
+
+.clock-k {
+  font-family: "Martian Mono", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.clock-v {
+  font-family: "Martian Mono", ui-monospace, monospace;
+  font-size: 16px;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--accent);
+}
+
+.word-kurir,
+.word-hujan {
+  position: absolute;
+  margin: 0;
+  font-weight: 400;
+  font-size: 300px;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.word-kurir {
+  left: 64px;
+  top: 462px;
+  font-family: "Edu TAS Beginner", cursive;
+  color: var(--text);
+}
+
+.word-hujan {
+  left: 658px;
+  top: 473px;
+  font-family: "Madimi One", sans-serif;
+  color: var(--accent);
+}
+
+.daftar-title {
+  position: absolute;
+  left: 231px;
+  top: 161px;
+  width: 978px;
+  font-family: "Hanuman", serif;
+  font-size: 96px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: var(--text);
+}
+
+.daftar-form {
+  position: absolute;
+  left: 398px;
+  top: 315px;
+  width: 644px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 14px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 85px;
+}
+
+.field-pos {
+  height: 96px;
+  gap: 12px;
+}
+
+.field:focus-within {
+  border-color: var(--accent);
+}
+
+.field-label {
+  font-family: "Martian Mono", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+
+.field input {
+  width: 100%;
+  font-family: "Hanken Grotesk", sans-serif;
+  font-size: 18px;
+  line-height: 1.55;
+  letter-spacing: 0;
+  color: var(--text);
+  outline: none;
+}
+
+.field input::placeholder {
+  color: rgba(220, 228, 238, 0.75);
+  opacity: 1;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.chip {
+  height: 34px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  font-family: "Martian Mono", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.chip[aria-checked="true"] {
+  background: var(--bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.daftar-btn {
+  height: 61px;
+  width: 100%;
+  background: var(--accent);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  font-family: "Martian Mono", ui-monospace, monospace;
+  font-size: 16px;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.daftar-arrow {
+  font-family: "Martian Mono", ui-monospace, sans-serif;
+}
+
+.close-basah,
+.close-rest {
+  position: absolute;
+  font-weight: 400;
+  font-size: 96px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.close-basah {
+  left: 64px;
+  top: 201px;
+  font-family: "Madimi One", sans-serif;
+  color: var(--accent);
+}
+
+.close-rest {
+  left: 338px;
+  top: 212px;
+  font-family: "Hanuman", serif;
+  color: var(--text);
+}
+
+.foot {
+  position: absolute;
+  left: 64px;
+  top: 508px;
+  width: 1312px;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.foot p {
+  font-family: "Martian Mono", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.foot-accent {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.field input:focus-visible {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
